@@ -20,10 +20,11 @@ export function initFiltering(elements, indexes) {
 
     return (data, state, action) => {
         // @todo: #4.2 — обработать очистку пол
+    
         if (action && action.name === 'clear') {
-            const field = action.target.parentElement;
-            const input = field.querySelector('input');
-            const fieldName = action.target.dataset.field;
+            const field = action.parentElement;
+            const input = field.querySelector('input, select');
+            const fieldName = action.dataset.field;
             input.value = '';
             state[fieldName] = '';
         }
