@@ -48,8 +48,7 @@ async function render(action) {
     let query = {}; // копируем для последующего изменения
     // @todo: использование
     // result = applySearching(result, state, action);
-    // result = applyFiltering(result, state, action); //скорее всего я неправильно использовал аргументы не те, поэтому с кнопкойне вышло
-    // result = applySorting(result, state, action);
+    query = applyFiltering(query, state, action);
     query = applyPagination(query, state, action);
     const { total, items } = await api.getRecords(query);
 
@@ -81,10 +80,11 @@ const {applyPagination, updatePagination} = initPagination(
         return el;
     }
 );
-// const applyFiltering = initFiltering(sampleTable.filter.elements, {    // передаём элементы фильтра
-//     searchBySeller: indexes.sellers
-//     // для элемента с именем searchBySeller устанавливаем массив продавцов
-// });
+const {applyFiltering, updateIndexes} = initFiltering(sampleTable.filter.elements, {    // передаём элементы фильтра
+    searchBySeller: []
+    // для элемента с именем searchBySeller устанавливаем массив продавцов
+});
+
 const applySearching = initSearching('search');
 
 
@@ -95,6 +95,10 @@ appRoot.appendChild(sampleTable.container);
 
 async function init() {
     const indexes = await api.getIndexes();
+
+    updateIndexes(sampleTable.filter.elements, {
+        searchBySeller: indexes.sellers
+    });
 }
 
 init().then(render)
